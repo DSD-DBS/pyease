@@ -1,0 +1,26 @@
+[build-system]
+requires = ["setuptools", "wheel", "versioneer-518"]
+build-backend = "setuptools.build_meta"
+
+[tool.black]
+line-length = 88
+target-version = ["py38",]
+
+[tool.isort]
+ensure_newline_before_comments = true
+force_grid_wrap = 0
+import_heading_stdlib = "Standard library:"
+import_heading_thirdparty = "3rd party:"
+import_heading_firstparty = "1st party:"
+import_heading_localfolder = "local:"
+include_trailing_comma = true
+known_local_folder = ["pyease",]
+known_third_party = ["eclipse",]
+line_length = 88
+multi_line_output = 3
+py_version = "auto"
+sections = ["FUTURE", "STDLIB", "THIRDPARTY", "FIRSTPARTY", "LOCALFOLDER",]
+use_parentheses = true
+
+[tool.vulture]
+exclude = ["exporter",]
