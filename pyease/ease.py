@@ -1,9 +1,38 @@
-"""Module with library code for use of EASE with Python.
+"""Module to prepare an EASE workspace and with code for use of EASE with Python.
+
+To get a prepared workspace the environment variables
+
+* ``EASE_WORKSPACE`` and
+* ``EASE_SCRIPTS_LOCATION``
+
+The environment variable ``EASE_WORKSPACE`` points to an absolute directory path that
+will be used to create the prepared Capella workspace.
+
+The directory must not exist and will be removed/ recreated if it is already given.
+With that variable defined the current script is to be run using a Python3 interpreter.
+
+The workspace that will be created comes with needed EASE preferences that are normally
+set in the Capella GUI. These preferences tell EASE which Python interpreter is to be
+used (it is the one used for this non EASE context no. 1) and defines where EASE can
+find this present EASE script to execute it on startup of Capella as defined in the
+special comment in the very first line of this module.
+
+The environment variable ``EASE_SCRIPTS_LOCATION`` is an absolute directory path telling
+EASE where to look for Python scripts.
+
+Both of these environment variables must be set before one executes this present module
+via
+
+.. code-block:: bash
+
+    python3 -m pyease.ease
+
+The current script logs what it does into a log file named ``ease.log`` in the
+current working directory.
 
 .. note::
 
     The module expects, that Eclipse/ Capella is set to English language.
-
 
 .. seealso::
 
@@ -317,17 +346,51 @@ class TreeItemWithLabelMatchingRegExIsAvailable(object):
         implements = ["org.eclipse.swtbot.swt.finder.waits.ICondition"]
 
 
-def _create_empty_workspace_with_ease_setup(workspace_path: Path):
-    """Create a workspace as needed EASE scripts that shall run on startup of Eclipse.
+def click_button_with_label(label: str, timeout: int = 5000, interval: int = 500):
+    """Wait for a button to be available and enabled and click the button.
 
-    The following environment variable must be set ``GIT2T4C_WORKSPACE`` to define
-    a target directory for the workspace.
+    The function waits until the button is available and enabled, or the timeout is
+    reached. The interval is the delay between attempts to find and click the button.
+
+    Parameters
+    ----------
+    label
+        Label of the button to click
+    timeout
+        Timeout in ms until we wait to find a button named *label* in an enabled state
+    interval
+        The interval is the delay between attempts to find and click the button
 
     """
-    workspace_path = workspace_path.resolve()
+    if BOT is None:
+        raise exp.EaseNoSWTWorkbenchBotError
+    BOT.waitUntil(ButtonWithLabelIsAvailable(label), timeout, interval)
+    BOT.waitUntil(ButtonWithLabelIsEnabled(label), timeout, interval)
+    logger.debug(f"Click the identified button labelled '{label}'...")
+    BOT.button(label).click()
+
+
+def create_empty_workspace_with_ease_setup():
+    """Create a workspace as needed for EASE scripts running on startup of Eclipse.
+
+    The following environment variables must be set
+
+    * ``EASE_WORKSPACE`` and
+    * ``EASE_SCRIPTS_LOCATION``
+
+    Find more information in the module docstring for :mod:`pyease.ease`.
+
+    """
+    workspace_str: str = os.getenv("EASE_WORKSPACE", "")
+    if not workspace_str:
+        raise OSError("Set the environment variable 'EASE_WORKSPACE'!")
+    workspace_path: Path = Path(workspace_str).resolve()
     parent_dir: Path = workspace_path.resolve().parent
     if not parent_dir.is_dir():
-        raise ValueError(f"'{workspace_path}' but the parent directory does not exist!")
+        raise ValueError(
+            f"The environment variable 'EASE_WORKSPACE' points to an existing "
+            f"directory '{workspace_path}' but the parent directory does not exist!"
+        )
     if not os.access(parent_dir, os.W_OK):
         raise ValueError(
             f"The directory '{workspace_path}' to create an EASE workspace "
@@ -342,7 +405,17 @@ def _create_empty_workspace_with_ease_setup(workspace_path: Path):
         logger.info(f"Remove existing directory '{workspace_path}'...")
         shutil.rmtree(workspace_path)
 
-    capella_script_dir: Path = MODULE_DIR.parent
+    ease_scripts_location_str: str = os.getenv("EASE_SCRIPTS_LOCATION", "")
+    if not ease_scripts_location_str:
+        raise OSError("Set the environment variable 'EASE_SCRIPTS_LOCATION'!")
+    ease_scripts_location_path: Path = Path(ease_scripts_location_str).resolve()
+    parent_dir: Path = ease_scripts_location_path.resolve().parent
+    if not parent_dir.is_dir():
+        raise ValueError(
+            f"The environment variable 'EASE_SCRIPTS_LOCATION' points to an existing "
+            f"directory '{ease_scripts_location_path}' but the parent directory does "
+            "not exist!"
+        )
     logger.info(f"Create Eclipse workspace directory '{workspace_path}'...")
     logger.info("Set preferences for EASE:")
     workspace_path.mkdir(parents=True)
@@ -379,14 +452,18 @@ def _create_empty_workspace_with_ease_setup(workspace_path: Path):
     # set default location for EASE scripts:
     ease_scripts_file_path: Path = settings_dir / "org.eclipse.ease.ui.scripts.prefs"
     logger.debug(f"Create file '{ease_scripts_file_path}'...")
-    logger.info(f"\t- Default location for EASE scripts: '{capella_script_dir}'")
+    logger.info(
+        f"\t- Default location for EASE scripts: '{ease_scripts_location_path}'"
+    )
     module_dir_pipe_separated: str = (
-        str(capella_script_dir).replace(os.sep, "|").replace(":", "\\:")
+        str(ease_scripts_location_path).replace(os.sep, "|").replace(":", "\\:")
     )
     if not module_dir_pipe_separated.startswith("|"):
         module_dir_pipe_separated = f"|{module_dir_pipe_separated}"
 
-    module_dir: str = str(capella_script_dir).replace(os.sep, "/").replace(":", "\\:")
+    module_dir: str = (
+        str(ease_scripts_location_path).replace(os.sep, "/").replace(":", "\\:")
+    )
     if not module_dir.startswith("/"):
         module_dir = f"/{module_dir}"
     Path(ease_scripts_file_path).write_text(
@@ -424,30 +501,6 @@ def _create_empty_workspace_with_ease_setup(workspace_path: Path):
         "eclipse.preferences.version=1\n"
         "quickStart=false\n"
     )
-
-
-def click_button_with_label(label: str, timeout: int = 5000, interval: int = 500):
-    """Wait for a button to be available and enabled and click the button.
-
-    The function waits until the button is available and enabled, or the timeout is
-    reached. The interval is the delay between attempts to find and click the button.
-
-    Parameters
-    ----------
-    label
-        Label of the button to click
-    timeout
-        Timeout in ms until we wait to find a button named *label* in an enabled state
-    interval
-        The interval is the delay between attempts to find and click the button
-
-    """
-    if BOT is None:
-        raise exp.EaseNoSWTWorkbenchBotError
-    BOT.waitUntil(ButtonWithLabelIsAvailable(label), timeout, interval)
-    BOT.waitUntil(ButtonWithLabelIsEnabled(label), timeout, interval)
-    logger.debug(f"Click the identified button labelled '{label}'...")
-    BOT.button(label).click()
 
 
 def fill_text_field_with_label(label: str, text: str):
@@ -512,7 +565,6 @@ def kill_capella_process():
     ):
         if "capella" in line.lower():
             pid: str = re.match(r"(\d+)(.*?)", line).group(1)
-            logger.info("Kill process with PID " + pid)
             subprocess.check_call(["kill", "-9", pid])
 
 
@@ -652,3 +704,9 @@ def workspace_path() -> Path:
 
     """
     return Path(getWorkspace().getLocation().toString())
+
+
+if __name__ == "__main__":
+    log_file_dir: Path = Path()
+    log_to_file(log_file_path=log_file_dir / "ease.log")
+    create_empty_workspace_with_ease_setup()
