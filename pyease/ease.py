@@ -566,6 +566,8 @@ def kill_capella_process():
         if "capella" in line.lower():
             pid: str = re.match(r"(\d+)(.*?)", line).group(1)
             subprocess.check_call(["kill", "-9", pid])
+            logger.info("Killed process with PID " + pid)
+
 
 
 def log_intro_messages():
