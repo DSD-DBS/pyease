@@ -12,6 +12,6 @@ artifactory:
 
 include:
   - project: "se-toolchain/ci-templates-docker"
-    ref: v1.7.0
+    ref: v1.8.1
     file:
       - "/gitlab-ci/python/wheel.yml"
