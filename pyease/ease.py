@@ -569,8 +569,11 @@ def kill_capella_process():
                 logger.error("Cannot identify PID of Capella process!")
                 return
             pid: str = match.group(2)
-            subprocess.check_call(["kill", "-9", pid])
-            logger.info("Killed process with PID " + pid)
+            try:
+                subprocess.check_call(["kill", "-9", pid])
+                logger.info("Killed process with PID " + pid)
+            except subprocess.CalledProcessError as e:
+                logger.exception(f"Could not kill Capella process: {e}")
 
 
 def log_intro_messages():
