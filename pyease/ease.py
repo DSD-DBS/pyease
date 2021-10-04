@@ -548,7 +548,7 @@ def is_eclipse_view_shown(title: str) -> bool:
     return False
 
 
-def kill_capella_process():
+def kill_capella_process(signal: int = 9):
     """Kill Capella process.
 
     The EASE commands
@@ -570,7 +570,7 @@ def kill_capella_process():
                 return
             pid: str = match.group(2)
             try:
-                subprocess.check_call(["kill", "-9", pid])
+                subprocess.check_call(["kill", "-" + str(signal), pid])
                 logger.info("Killed process with PID " + pid)
             except subprocess.CalledProcessError as e:
                 logger.exception(f"Could not kill Capella process: {e}")
