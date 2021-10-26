@@ -635,7 +635,7 @@ def kill_capella_process(signal: int = 9):
         subprocess.check_output(["ps", "-eo", "pid,comm"]).decode("utf8").splitlines()
     ):
         if "capella" in line.lower():
-            match: re.Match = re.match(r"(.*?)(\d+)(.*?)", line)
+            match: t.Optional[re.Match] = re.match(r"(.*?)(\d+)(.*?)", line)
             if match is None:
                 logger.error("Cannot identify PID of Capella process!")
                 return
