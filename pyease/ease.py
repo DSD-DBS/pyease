@@ -5,6 +5,8 @@ To get a prepared workspace the environment variables
 * ``EASE_WORKSPACE`` and
 * ``EASE_SCRIPTS_LOCATION``
 
+must be set.
+
 The environment variable ``EASE_WORKSPACE`` points to an absolute directory path that
 will be used to create the prepared Capella workspace.
 
