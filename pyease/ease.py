@@ -372,6 +372,55 @@ def click_button_with_label(label: str, timeout: int = 5000, interval: int = 500
     BOT.button(label).click()
 
 
+def clone_project_from_git(
+    git_repo_url: str, git_repo_branch: str, target_git_clone_dir: Path
+):
+    """Clone (with depth = 1) a Capella model from Git into a target directory.
+
+    This function blocks the main thread until completion. When an ssh Git URL is
+    provided the function expects that Gitlab user credentials for ssh are set on the
+    computer executing this script.
+
+    Parameters
+    ----------
+    git_repo_url
+        URL to the remote Git repository
+    git_repo_branch
+        Branch name in the remote Git repository
+    target_git_clone_dir
+        Target directory path for the git clone of the repository
+
+    """
+    if target_git_clone_dir.is_dir():
+        shutil.rmtree(target_git_clone_dir, ignore_errors=True)
+    logger.info(
+        f"Clone of project from '{git_repo_url}' (branch '{git_repo_branch}') "
+        f"with depth set to 1 into directory '{target_git_clone_dir}'..."
+    )
+    try:
+        subprocess.run(
+            [
+                "git",
+                "clone",
+                "--branch",
+                git_repo_branch,
+                "--depth",
+                "1",
+                "--single-branch",
+                git_repo_url,
+                target_git_clone_dir,
+            ],
+            capture_output=True,
+            check=True,
+        )
+        logger.info("Cloning Git project completed.")
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError(
+            f"Clone of project from '{git_repo_url}' "
+            f"(branch '{git_repo_branch}') failed: {e.stderr}"
+        ) from e
+
+
 def create_empty_workspace_with_ease_setup():
     """Create a workspace as needed for EASE scripts running on startup of Eclipse.
 
@@ -529,6 +578,26 @@ def fill_text_field_with_label(label: str, text: str):
     logger.debug(f"Set the content of the text field labelled '{label}' to '{text}'...")
     textfield.setText(text)
 
+
+def import_git_project_from_folder(tmp_git_clone_dir: Path):
+    """Import temporary cloned Git project from folder into Capella workspace.
+
+    Parameters
+    ----------
+    tmp_git_clone_dir
+        Temporary path as target for git clone
+
+    """
+    logger.info(f"Import Git project from folder ('{tmp_git_clone_dir}')...")
+    BOT.menu("File").menu("Import...").click()
+    git_node: t.Any = BOT.tree().getTreeItem("General")
+    git_node.select()
+    git_node.expand()
+    git_node.getNode("Projects from Folder or Archive").doubleClick()
+    combo_box: t.Any = BOT.comboBox(0)
+    combo_box.setText(str(tmp_git_clone_dir))
+    click_button_with_label(label="Finish", timeout=60000, interval=500)
+    BOT.waitUntil(MenuIsAvailable("File"), 600000, 500)
 
 def is_eclipse_view_shown(title: str) -> bool:
     """Check if an Eclipse view specified by its *title* is currently shown.
