@@ -82,7 +82,7 @@ class _MyLoggingFilter(logging.Filter):
     def __init__(self):
         pass
 
-    def filter(self, record):
+    def filter(self, record):  # noqa:A003 "'filter' is shadowing a python builtin"
         filter_: bool = any(
             (
                 record.msg.startswith("Command to send: "),
