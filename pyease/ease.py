@@ -182,6 +182,37 @@ class ButtonWithLabelIsEnabled(object):
         implements = ["org.eclipse.swtbot.swt.finder.waits.ICondition"]
 
 
+class ButtonWithLabelIsNotAvailable(object):
+    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""  # noqa: E501,W505
+
+    def __init__(self, label: str):
+        """Construct class."""
+        self.label = label
+
+    def init(self, bot: t.Any) -> None:
+        """Implement Java constructor."""
+        self.bot = bot
+
+    def test(self) -> bool:
+        """Test the condition (if button with label is accessible)."""
+        try:
+            self.bot.button(self.label)
+            logger.debug(f"Button labelled '{self.label}' is available.")
+            return False
+        except Exception:
+            logger.debug(f"Button labelled '{self.label}' is not available.")
+            return True
+
+    def getFailureMessage(self) -> str:
+        """Define message that will be raised when the timeout reached."""
+        return f"Could not find a button labelled '{self.label}'!"
+
+    class Java:
+        """Implement Java interface."""
+
+        implements = ["org.eclipse.swtbot.swt.finder.waits.ICondition"]
+
+
 class ComboBoxWithLabelIsAvailable(object):
     """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""  # noqa: E501,W505
 
