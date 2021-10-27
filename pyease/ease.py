@@ -65,6 +65,7 @@ try:
     """
     see https://download.eclipse.org/technology/swtbot/galileo/dev-build/apidocs/org/eclipse/swtbot/eclipse/finder/SWTWorkbenchBot.html
     see https://download.eclipse.org/technology/swtbot/galileo/dev-build/apidocs/org/eclipse/swtbot/swt/finder/SWTBot.html
+    see https://www.eclipse.org/swt/widgets/
 
     """  # noqa: E501, W505
     # 3rd party:
