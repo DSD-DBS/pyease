@@ -422,6 +422,28 @@ def clone_project_from_git(
         ) from e
 
 
+def close_eclipse_view(title: str) -> None:
+    """Close the Eclipse view specified by its *title*.
+
+    If that view is not open the logger will report that on debug level.
+
+    Parameters
+    ----------
+    title
+        Title of the view to be opened
+
+    """
+    found_view: bool = False
+    view: t.Any
+    for view in BOT.views():
+        found_view = view.getTitle() == title
+        if found_view:
+            view.close()
+            break
+    if not found_view:
+        logger.debug(f"Cannot close view titled '{title}'. View cannot be found.")
+
+
 def create_empty_workspace_with_ease_setup():
     """Create a workspace as needed for EASE scripts running on startup of Eclipse.
 
