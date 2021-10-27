@@ -599,6 +599,7 @@ def import_git_project_from_folder(tmp_git_clone_dir: Path):
     click_button_with_label(label="Finish", timeout=60000, interval=500)
     BOT.waitUntil(MenuIsAvailable("File"), 600000, 500)
 
+
 def is_eclipse_view_shown(title: str) -> bool:
     """Check if an Eclipse view specified by its *title* is currently shown.
 
