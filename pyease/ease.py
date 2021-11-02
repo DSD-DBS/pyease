@@ -678,8 +678,10 @@ def is_projects_in_workspace() -> bool:
     """Check if we have any project(s) in the workspace.
 
     The view ``Project Explorer`` does not contain a widget of kind tree when there is
-    no project in the workspace. This function tries to get a handle for that tree and
-    if that fails we know, that there is no project in the workspace.
+    no project in the workspace or the tree will be empty.
+    This function tries to get a handle for that tree and if that fails we know,
+    that there is no project in the workspace. If there is a tree, this function will
+    check if there is any item in the tree.
 
     Returns
     -------
