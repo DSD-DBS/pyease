@@ -685,6 +685,7 @@ def is_projects_in_workspace() -> bool:
     -------
     bool
         True, when there is any project in the workspace
+
     """
     try:
         project_explorer_tree()
