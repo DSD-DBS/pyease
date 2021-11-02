@@ -687,7 +687,7 @@ def is_projects_in_workspace() -> bool:
         True, when there is any project in the workspace
     """
     try:
-        ease.project_explorer_tree()
+        project_explorer_tree()
         return True
     except Exception:
         return False
