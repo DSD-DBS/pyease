@@ -689,7 +689,7 @@ def is_projects_in_workspace() -> bool:
     """
     try:
         project_explorer_tree()
-        return True
+        return len(project_explorer_tree().getAllItems()) >= 1
     except Exception:
         return False
 
