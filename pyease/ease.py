@@ -674,6 +674,25 @@ def is_eclipse_view_shown(title: str) -> bool:
     return False
 
 
+def is_projects_in_workspace() -> bool:
+    """Check if we have any project(s) in the workspace.
+
+    The view ``Project Explorer`` does not contain a widget of kind tree when there is
+    no project in the workspace. This function tries to get a handle for that tree and
+    if that fails we know, that there is no project in the workspace.
+
+    Returns
+    -------
+    bool
+        True, when there is any project in the workspace
+    """
+    try:
+        ease.project_explorer_tree()
+        return True
+    except Exception:
+        return False
+
+
 def kill_capella_process(signal: int = 9):
     """Kill Capella process.
 
