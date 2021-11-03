@@ -864,5 +864,6 @@ def workspace_path() -> Path:
 
 if __name__ == "__main__":
     log_file_dir: str = os.getenv("EASE_LOG_FILE_DIR", str(Path()))
-    log_to_file(log_file_path=Path(log_file_dir) / "ease.log")
+    log_file_path: Path = Path(log_file_dir) / "ease.log"
+    log_to_file(log_file_path=log_file_path)
     create_empty_workspace_with_ease_setup()
