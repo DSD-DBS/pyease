@@ -774,7 +774,8 @@ def log_to_file(log_file_path: Path, mode: str = "w"):
     file_hdl.setFormatter(formatter)
     file_hdl.addFilter(_MyLoggingFilter())
     logger.addHandler(file_hdl)
-    logger.info(f"Log to '{log_file_path}'...")
+    if mode == "w":
+        logger.info(f"Log to '{log_file_path}'...")
 
 
 def open_eclipse_perspective(name: str):
