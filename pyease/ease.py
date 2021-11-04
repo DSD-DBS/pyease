@@ -522,8 +522,8 @@ def create_empty_workspace_with_ease_setup():
             "not exist!"
         )
     logger.info(f"Create Eclipse workspace directory '{workspace_path}'...")
-    logger.info("Set preferences for EASE:")
     workspace_path.mkdir(parents=True)
+    logger.info("Set preferences for EASE:")
     # Create file that is needed to save the state of the workbench:
     root_dir: Path = Path(
         workspace_path / ".metadata/.plugins/org.eclipse.core.resources/.root"
