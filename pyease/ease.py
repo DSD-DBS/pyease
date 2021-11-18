@@ -719,7 +719,7 @@ def kill_capella_process(signal: int = 9):
             pid: str = match.group(2)
             try:
                 subprocess.check_call(["kill", "-" + str(signal), pid])
-                logger.info("Killed process with PID " + pid)
+                logger.info(f"Killed process with PID {pid} by ending signal {signal}.")
             except subprocess.CalledProcessError as e:
                 logger.exception(f"Could not kill Capella process: {e}")
 
