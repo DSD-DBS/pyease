@@ -500,7 +500,8 @@ def create_empty_workspace_with_ease_setup():
         shutil.rmtree(workspace_path)
     else:
         try:
-            os.makedirs(workspace_path)
+            logger.info(f"Create Eclipse workspace directory '{workspace_path}'...")
+            workspace_path.mkdir(parents=True)
         except OSError:
             logger.exception(
                 f"Cannot create the workspace directory '{workspace_path}'!"
@@ -517,8 +518,6 @@ def create_empty_workspace_with_ease_setup():
             f"directory '{ease_scripts_location_path}' but the parent directory does "
             "not exist!"
         )
-    logger.info(f"Create Eclipse workspace directory '{workspace_path}'...")
-    workspace_path.mkdir(parents=True)
     logger.info("Set preferences for EASE:")
     # Create file that is needed to save the state of the workbench:
     root_dir: Path = Path(
