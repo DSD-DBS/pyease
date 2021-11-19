@@ -490,17 +490,6 @@ def create_empty_workspace_with_ease_setup():
     if not workspace_str:
         raise OSError("Set the environment variable 'EASE_WORKSPACE'!")
     workspace_path: Path = Path(workspace_str).resolve()
-    parent_dir: Path = workspace_path.resolve().parent
-    if not parent_dir.is_dir():
-        raise ValueError(
-            f"The environment variable 'EASE_WORKSPACE' points to an existing "
-            f"directory '{workspace_path}' but the parent directory does not exist!"
-        )
-    if not os.access(parent_dir, os.W_OK):
-        raise ValueError(
-            f"The directory '{workspace_path}' to create an EASE workspace "
-            "is not writeable!"
-        )
     if workspace_path.is_dir():
         if not os.access(workspace_path, os.W_OK):
             raise OSError(
@@ -509,6 +498,13 @@ def create_empty_workspace_with_ease_setup():
             )
         logger.info(f"Remove existing directory '{workspace_path}'...")
         shutil.rmtree(workspace_path)
+    else:
+        try:
+            os.makedirs(workspace_path)
+        except OSError as exp:
+            logger.exception(
+                f"Cannot create the workspace directory '{workspace_path}'!"
+            )
 
     ease_scripts_location_str: str = os.getenv("EASE_SCRIPTS_LOCATION", "")
     if not ease_scripts_location_str:
