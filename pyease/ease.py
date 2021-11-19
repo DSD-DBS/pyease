@@ -501,7 +501,7 @@ def create_empty_workspace_with_ease_setup():
     else:
         try:
             os.makedirs(workspace_path)
-        except OSError as exp:
+        except OSError:
             logger.exception(
                 f"Cannot create the workspace directory '{workspace_path}'!"
             )
