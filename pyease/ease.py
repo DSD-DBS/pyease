@@ -418,9 +418,9 @@ def click_button_with_label(label: str, timeout: int = 5000, interval: int = 500
 
 
 def clone_project_from_git(
-    git_repo_url: str, git_repo_branch: str, target_git_clone_dir: Path
+    git_repo_url: str, git_repo_branch: str, target_git_clone_dir: Path, depth: int = 1
 ):
-    """Clone (with depth = 1) a Capella model from Git into a target directory.
+    """Clone a Capella model from Git into a target directory.
 
     This function blocks the main thread until completion. When an ssh Git URL is
     provided the function expects that Gitlab user credentials for ssh are set on the
@@ -434,6 +434,8 @@ def clone_project_from_git(
         Branch name in the remote Git repository
     target_git_clone_dir
         Target directory path for the git clone of the repository
+    depth : optional
+        Depth for a shallow clone (the default is 1)
 
     """
     if target_git_clone_dir.is_dir():
@@ -443,18 +445,12 @@ def clone_project_from_git(
         f"with depth set to 1 into directory '{target_git_clone_dir}'..."
     )
     try:
+        git_cmd: list[str] = ["git", "clone"]
+        if depth is not None:
+            git_cmd += ["--depth", str(depth)]
+        git_cmd += ["--single-branch", git_repo_url, str(target_git_clone_dir)]
         subprocess.run(
-            [
-                "git",
-                "clone",
-                "--branch",
-                git_repo_branch,
-                "--depth",
-                "1",
-                "--single-branch",
-                git_repo_url,
-                target_git_clone_dir,
-            ],
+            git_cmd,
             capture_output=True,
             check=True,
         )
@@ -463,6 +459,33 @@ def clone_project_from_git(
         raise RuntimeError(
             f"Clone of project from '{git_repo_url}' "
             f"(branch '{git_repo_branch}') failed: {e.stderr}"
+        ) from e
+    try:
+        subprocess.run(
+            ["git", "switch", git_repo_branch],
+            check=True,
+            capture_output=True,
+            cwd=target_git_clone_dir,
+        )
+        logger.info(f"Switched to branch '{git_repo_branch}'.")
+        return
+    except subprocess.CalledProcessError as e:
+        logger.info(
+            f"Switching to branch '{git_repo_branch}' for '{git_repo_url}' "
+            f" failed: {e.stderr}"
+        )
+    try:
+        subprocess.run(
+            ["git", "switch", "-c", git_repo_branch],
+            check=True,
+            capture_output=True,
+            cwd=target_git_clone_dir,
+        )
+        logger.info(f"Created branch '{git_repo_branch}'.")
+    except subprocess.CalledProcessError as e:
+        raise RuntimeError(
+            f"Switching to branch '{git_repo_branch}' for '{git_repo_url}' "
+            f" failed: {e.stderr}"
         ) from e
 
 
