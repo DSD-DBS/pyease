@@ -511,6 +511,61 @@ def close_eclipse_view(title: str) -> None:
         logger.debug(f"Cannot close view titled '{title}'. View cannot be found.")
 
 
+def connect_to_remote_t4c_model(
+    t4c_repo_host: str,
+    t4c_repo_port_no: str,
+    t4c_repo_name: str,
+    t4c_project_name: str,
+    t4c_username: str,
+    t4c_password: str,
+):
+    """Connect to remote T4C model.
+
+    Parameters
+    ----------
+    t4c_repo_host
+        Host name of the T4C server
+    t4c_repo_port_no
+        Port number to which the T4C server listens to
+    t4c_repo_name
+        T4C repository name
+    t4c_project_name
+        T4C project name
+    t4c_username
+        T4C user name of the *t4c_repo_name*
+    t4c_password
+        T4C password of the *t4c_repo_name*
+
+    """
+    logger.info(
+        f"Connect to T4C model '{t4c_project_name}' in repository "
+        f"'{t4c_repo_name}@{t4c_repo_host}:{t4c_repo_port_no}'..."
+    )
+    BOT.menu("File").menu("New").menu("Other...").click()
+    t4c_node: t.Any = BOT.tree().getTreeItem("Team for Capella")
+    t4c_node.expand()
+    connect_to_remote_model: t.Any = t4c_node.getNode("Connect to remote model")
+    connect_to_remote_model.doubleClick()
+    fill_text_field_with_label("Repository Host:", t4c_repo_host)
+    fill_text_field_with_label("Port Number:", t4c_repo_port_no)
+    fill_text_field_with_label("Repository Name:", t4c_repo_name)
+    click_button_with_label("Test connection")
+    try:
+        BOT.waitUntil(TextfieldWithLabelIsAvailable("User name"), 5000, 500)
+        fill_text_field_with_label("User name", t4c_username)
+        fill_text_field_with_label("Password", t4c_password)
+        click_button_with_label("OK")
+    except Exception:
+        pass
+    click_button_with_label(label="Next >", timeout=5000, interval=500)
+    label: str = "Shared Project to Connect to:"
+    BOT.waitUntil(ComboBoxWithLabelIsAvailable(label), 5000, 500)
+    BOT.comboBoxWithLabel(label).setSelection(
+        f"/{t4c_project_name}/{t4c_project_name}.aird"
+    )
+    click_button_with_label("Finish")
+
+
 def create_empty_workspace_with_ease_setup():
     """Create a workspace as needed for EASE scripts running on startup of Eclipse.
 
