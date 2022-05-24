@@ -135,7 +135,7 @@ at a specified location.
 1. Patch py4j code:
 
    Edit the file
-   `/opt/capella/plugins/py4j-python_0.10.9.2-bnd-2odeag/src/py4j/java_collections.py`
+   `<CAPELLA_ROOT>/plugins/py4j-python_0.10.9.2-bnd-2odeag/src/py4j/java_collections.py`
    and encapsulate the first line (`new_key = self.__compute_index(key)`) of the method
    `__compute_item` in a try/ except block:
 
