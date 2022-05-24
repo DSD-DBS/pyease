@@ -121,7 +121,7 @@ at a specified location.
      PyFile()
      ```
 
-   - Past the next code scnippet into a file `~/.gdbinit`.
+   - Past the next code snippet into a file `~/.gdbinit`.
 
      You may need to adapt the file path in the first line of the code snippet.
 
