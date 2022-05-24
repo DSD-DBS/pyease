@@ -121,7 +121,9 @@ at a specified location.
      PyFile()
      ```
 
-   - Create a file `~/.gdbinit` with the following code:
+   - Past the next code scnippet into a file `~/.gdbinit`.
+
+     You may need to adapt the file path in the first line of the code snippet.
 
      ```sh
      source /usr/share/gdb/auto-load/usr/bin/python3.9-gdb.py
