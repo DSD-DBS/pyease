@@ -304,7 +304,6 @@ class CompareResultIsAvailable:
         except Exception:
             return False
 
-    # pylint: disable-next=no-self-use
     def getFailureMessage(self):
         """Define message that will be raised when the timeout reached."""
         return "Cannot access compare result!"
@@ -838,7 +837,7 @@ def import_model_from_remote_repository(
 
     """
     logger.info(
-        "Connect to T4C model '%s' in repository " "'%s@%s:%s'...",
+        "Connect to T4C model '%s' in repository '%s@%s:%s'...",
         t4c_project_name,
         t4c_repo_name,
         t4c_repo_host,
@@ -957,7 +956,7 @@ def log_intro_messages():
     """
     logger.info("Executed by: '%s'.", sys.executable)
     logger.info(
-        "Running with debug mode %s " "%s EASE context.",
+        "Running with debug mode %s %s EASE context.",
         "enabled" if DEBUG else "disabled",
         "in" if IS_EASE_CTXT else "not in",
     )
