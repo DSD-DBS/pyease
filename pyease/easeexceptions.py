@@ -1,3 +1,6 @@
+# SPDX-FileCopyrightText: Copyright DB Netz AG and the pyease contributors
+# SPDX-License-Identifier: Apache-2.0
+
 """Module with exeptions for use of EASE with Python.
 
 .. seealso::
@@ -47,4 +50,6 @@ class EaseNoSWTWorkbenchBotError(EaseError):
 
     def __str__(self):
         return "There is not SWTWorkbenchBot available!"
+
+
 # pylint: enable=super-init-not-called
