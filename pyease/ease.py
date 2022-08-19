@@ -1,17 +1,4 @@
-# Copyright 2021 DB Netz AG
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-"""Module to prepare an EASE workspace and with code for use of EASE with Python.
+"""Module with helper functions to use EASE with Python.
 
 To get a prepared workspace the environment variables
 
@@ -20,39 +7,43 @@ To get a prepared workspace the environment variables
 
 must be set.
 
-The environment variable ``EASE_WORKSPACE`` points to an absolute directory path that
-will be used to create the prepared Capella workspace.
+The environment variable ``EASE_WORKSPACE`` points to an absolute
+directory path that will be used to create the prepared Capella
+workspace.
 
-The directory must not exist and will be removed/ recreated if it is already given.
-With that variable defined the current script is to be run using a Python3 interpreter.
+The directory must not exist and will be removed/ recreated if it is
+already given. With that variable defined the current script is to be
+run using a Python3 interpreter.
 
-The workspace that will be created comes with needed EASE preferences that are normally
-set in the Capella GUI. These preferences tell EASE which Python interpreter is to be
-used (it is the one used for this non EASE context no. 1) and defines where EASE can
-find this present EASE script to execute it on startup of Capella as defined in the
-special comment in the very first line of this module.
+The workspace that will be created comes with needed EASE preferences
+that are normally set in the Capella GUI. These preferences tell EASE
+which Python interpreter is to be used (it is the one used for this non
+EASE context no. 1) and defines where EASE can find this present EASE
+script to execute it on startup of Capella as defined in the special
+comment in the very first line of this module.
 
-The environment variable ``EASE_SCRIPTS_LOCATION`` is an absolute directory path telling
-EASE where to look for Python scripts.
+The environment variable ``EASE_SCRIPTS_LOCATION`` is an absolute
+directory path telling EASE where to look for Python scripts.
 
-Both of these environment variables must be set before one executes this present module
-via
+Both of these environment variables must be set before one executes this
+present module via
 
 .. code-block:: bash
 
     python3 -m pyease.ease
 
-The current script logs what it does into a log file named ``ease.log`` in the
-current working directory.
+The current script logs what it does into a log file named ``ease.log``
+in the current working directory.
 
 .. note::
 
-    The module expects, that Eclipse/ Capella is set to English language.
+    The module expects, that Eclipse/ Capella is set to English
+    language.
 
 .. seealso::
 
-    The acronym EASE stands for "Eclipse Advanced Scripting Environment".
-    Further information: https://www.eclipse.org/ease/
+    The acronym EASE stands for "Eclipse Advanced Scripting
+    Environment". Further information: https://www.eclipse.org/ease/
 
 """
 # Standard library:
@@ -74,15 +65,19 @@ IS_EASE_CTXT: bool = True
 MODULE_DIR: Path = Path(__file__).parents[0]
 
 try:
-    BOT = org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot()  # type: ignore # noqa
+    BOT = org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot()  # type: ignore
+    # pylint: disable=line-too-long
     """
     see https://download.eclipse.org/technology/swtbot/galileo/dev-build/apidocs/org/eclipse/swtbot/eclipse/finder/SWTWorkbenchBot.html
     see https://download.eclipse.org/technology/swtbot/galileo/dev-build/apidocs/org/eclipse/swtbot/swt/finder/SWTBot.html
     see https://www.eclipse.org/swt/widgets/
 
-    """  # noqa: E501, W505
+    """
+    # pylint: enable=line-too-long
     # 3rd party:
-    from eclipse.system.platform import getSystemProperty  # type: ignore # noqa
+    from eclipse.system.platform import (  # type: ignore # noqa
+        getSystemProperty,
+    )
     from eclipse.system.resources import getWorkspace  # type: ignore # noqa
     from eclipse.system.ui import isHeadless  # type: ignore # noqa
 except NameError:
@@ -94,9 +89,11 @@ logger.setLevel("DEBUG" if DEBUG else "INFO")
 
 class _MyLoggingFilter(logging.Filter):
     def __init__(self):
-        pass
+        super().__init__()
 
-    def filter(self, record):  # noqa:A003 "'filter' is shadowing a python builtin"
+    def filter(
+        self, record
+    ):  # noqa:A003 "'filter' is shadowing a python builtin"
         filter_: bool = any(
             (
                 record.msg.startswith("Command to send: "),
@@ -134,11 +131,14 @@ console_hdl.addFilter(_MyLoggingFilter())
 logger.addHandler(console_hdl)
 
 
-class ButtonWithLabelIsAvailable(object):
+class ButtonWithLabelIsAvailable:
+    # pylint: disable=line-too-long
     """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""  # noqa: E501,W505
+    # pylint: enable=line-too-long
 
     def __init__(self, label):
         """Construct class."""
+        self.bot = None
         self.label = label
 
     def init(self, bot):
@@ -148,10 +148,10 @@ class ButtonWithLabelIsAvailable(object):
     def test(self) -> bool:
         """Test the condition (if button with label is accessible)."""
         try:
-            self.bot.button(self.label)
-            logger.debug(f"Button labelled '{self.label}' is available.")
+            self.bot.button(self.label)  # type: ignore
+            logger.debug("Button labelled '%s' is available.", self.label)
         except Exception:
-            logger.debug(f"Button labelled '{self.label}' is not available.")
+            logger.debug("Button labelled '%s' is not available.", self.label)
             return False
         return True
 
@@ -165,11 +165,14 @@ class ButtonWithLabelIsAvailable(object):
         implements = ["org.eclipse.swtbot.swt.finder.waits.ICondition"]
 
 
-class ButtonWithLabelIsEnabled(object):
+class ButtonWithLabelIsEnabled:
+    # pylint: disable=line-too-long
     """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""  # noqa: E501,W505
+    # pylint: enable=line-too-long
 
     def __init__(self, label):
         """Construct class."""
+        self.bot = None
         self.label = label
 
     def init(self, bot):
@@ -178,10 +181,12 @@ class ButtonWithLabelIsEnabled(object):
 
     def test(self) -> bool:
         """Test the condition (if button with label is accessible)."""
-        button: t.Any = self.bot.button(self.label)
+        button: t.Any = self.bot.button(self.label)  # type: ignore
         enabled: bool = button.isEnabled()
         logger.debug(
-            f"Button labelled '{self.label}' is{'' if enabled else ' not'} enabled."
+            "Button labelled '%s' is%s enabled.",
+            self.label,
+            "" if enabled else " not",
         )
         return enabled
 
@@ -195,11 +200,14 @@ class ButtonWithLabelIsEnabled(object):
         implements = ["org.eclipse.swtbot.swt.finder.waits.ICondition"]
 
 
-class ButtonWithLabelIsNotAvailable(object):
+class ButtonWithLabelIsNotAvailable:
+    # pylint: disable=line-too-long
     """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""  # noqa: E501,W505
+    # pylint: enable=line-too-long
 
     def __init__(self, label: str):
         """Construct class."""
+        self.bot = None
         self.label = label
 
     def init(self, bot: t.Any) -> None:
@@ -209,11 +217,11 @@ class ButtonWithLabelIsNotAvailable(object):
     def test(self) -> bool:
         """Test the condition (if button with label is accessible)."""
         try:
-            self.bot.button(self.label)
-            logger.debug(f"Button labelled '{self.label}' is available.")
+            self.bot.button(self.label)  # type: ignore
+            logger.debug("Button labelled '%s' is available.", self.label)
             return False
         except Exception:
-            logger.debug(f"Button labelled '{self.label}' is not available.")
+            logger.debug("Button labelled '%s' is not available.", self.label)
             return True
 
     def getFailureMessage(self) -> str:
@@ -226,11 +234,14 @@ class ButtonWithLabelIsNotAvailable(object):
         implements = ["org.eclipse.swtbot.swt.finder.waits.ICondition"]
 
 
-class ComboBoxWithLabelIsAvailable(object):
+class ComboBoxWithLabelIsAvailable:
+    # pylint: disable=line-too-long
     """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""  # noqa: E501,W505
+    # pylint: enable=line-too-long
 
     def __init__(self, label):
         """Construct class."""
+        self.bot = None
         self.label = label
 
     def init(self, bot):
@@ -240,10 +251,12 @@ class ComboBoxWithLabelIsAvailable(object):
     def test(self) -> bool:
         """Test the condition (if combo box with label is accessible)."""
         try:
-            self.bot.comboBoxWithLabel(self.label)
-            logger.debug(f"Combo box labelled '{self.label}' is available.")
+            self.bot.comboBoxWithLabel(self.label)  # type: ignore
+            logger.debug("Combo box labelled '%s' is available.", self.label)
         except Exception:
-            logger.debug(f"Combo box labelled '{self.label}' is not available.")
+            logger.debug(
+                "Combo box labelled '%s' is not available.", self.label
+            )
             return False
         return True
 
@@ -257,11 +270,13 @@ class ComboBoxWithLabelIsAvailable(object):
         implements = ["org.eclipse.swtbot.swt.finder.waits.ICondition"]
 
 
-class CompareResultIsAvailable(object):
-    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""  # noqa: E501,W505
+class CompareResultIsAvailable:
+    # pylint: disable-next=line-too-long
+    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""
 
     def __init__(self, label):
         """Construct class."""
+        self.bot = None
         self.label = label
 
     def init(self, bot):
@@ -279,12 +294,14 @@ class CompareResultIsAvailable(object):
             compare_editor: t.Any = BOT.editorByTitle(self.label)
             synthesis_tree: t.Any = compare_editor.bot().tree(0)
             logger.info(
-                f"Identified (handle) compare result tree view '{synthesis_tree}'."
+                "Identified (handle) compare result tree view '%s'.",
+                synthesis_tree,
             )
             return True
         except Exception:
             return False
 
+    # pylint: disable-next=no-self-use
     def getFailureMessage(self):
         """Define message that will be raised when the timeout reached."""
         return "Cannot access compare result!"
@@ -295,11 +312,14 @@ class CompareResultIsAvailable(object):
         implements = ["org.eclipse.swtbot.swt.finder.waits.ICondition"]
 
 
-class MenuIsAvailable(object):
+class MenuIsAvailable:
+    # pylint: disable=line-too-long
     """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""  # noqa: E501,W505
+    # pylint: enable=line-too-long
 
     def __init__(self, label):
         """Construct class."""
+        self.bot = None
         self.label = label
 
     def init(self, bot):
@@ -309,7 +329,7 @@ class MenuIsAvailable(object):
     def test(self) -> bool:
         """Test the condition (if menu with label is accessible)."""
         try:
-            self.bot.menu(self.label)
+            self.bot.menu(self.label)  # type: ignore
         except Exception:
             return False
         return True
@@ -324,11 +344,14 @@ class MenuIsAvailable(object):
         implements = ["org.eclipse.swtbot.swt.finder.waits.ICondition"]
 
 
-class TextfieldWithLabelIsAvailable(object):
+class TextfieldWithLabelIsAvailable:
+    # pylint: disable=line-too-long
     """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""  # noqa: E501,W505
+    # pylint: enable=line-too-long
 
     def __init__(self, label):
         """Construct class."""
+        self.bot = None
         self.label = label
 
     def init(self, bot):
@@ -338,10 +361,12 @@ class TextfieldWithLabelIsAvailable(object):
     def test(self) -> bool:
         """Test the condition (if text field with label is accessible)."""
         try:
-            self.bot.textWithLabel(self.label)
-            logger.debug(f"Text field labelled '{self.label}' is available.")
+            self.bot.textWithLabel(self.label)  # type: ignore
+            logger.debug("Text field labelled '%s' is available.", self.label)
         except Exception:
-            logger.debug(f"Text field labelled '{self.label}' is not available.")
+            logger.debug(
+                "Text field labelled '%s' is not available.", self.label
+            )
             return False
         return True
 
@@ -355,11 +380,14 @@ class TextfieldWithLabelIsAvailable(object):
         implements = ["org.eclipse.swtbot.swt.finder.waits.ICondition"]
 
 
-class TreeItemWithLabelMatchingRegExIsAvailable(object):
+class TreeItemWithLabelMatchingRegExIsAvailable:
+    # pylint: disable=line-too-long
     """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""  # noqa: E501,W505
+    # pylint: enable=line-too-long
 
     def __init__(self, tree: t.Any, label_regex: str):
         """Construct class."""
+        self.bot = None
         self.tree = tree
         self.label_regex = label_regex
 
@@ -368,24 +396,26 @@ class TreeItemWithLabelMatchingRegExIsAvailable(object):
         self.bot = bot
 
     def test(self) -> bool:
-        """Test the condition (if tree tiem with label is accessible)."""
+        """Test the condition (if tree item with label is accessible)."""
         tree_item: t.Any
         tree_item_name: str
         for tree_item in self.tree.getAllItems():
             tree_item_name = tree_item.getText()
             if re.match(self.label_regex, tree_item_name) is not None:
                 logger.debug(
-                    f"Tree item with label matching '{self.label_regex}' is available."
+                    "Tree item with label matching '%s' is available.",
+                    self.label_regex,
                 )
                 return True
         logger.debug(
-            f"Tree item with label matching '{self.label_regex}' is not available."
+            "Tree item with label matching '%s' is not available.",
+            self.label_regex,
         )
         return False
 
     def getFailureMessage(self):
         """Define message that will be raised when the timeout reached."""
-        return f"Could not find a tree item labelled '{self.label}'!"
+        return f"Could not find a tree item labelled '{self.label}'!"  # type: ignore
 
     class Java:
         """Implement Java interface."""
@@ -393,7 +423,9 @@ class TreeItemWithLabelMatchingRegExIsAvailable(object):
         implements = ["org.eclipse.swtbot.swt.finder.waits.ICondition"]
 
 
-def click_button_with_label(label: str, timeout: int = 5000, interval: int = 500):
+def click_button_with_label(
+    label: str, timeout: int = 5000, interval: int = 500
+):
     """Wait for a button to be available and enabled and click the button.
 
     The function waits until the button is available and enabled, or the timeout is
@@ -413,12 +445,15 @@ def click_button_with_label(label: str, timeout: int = 5000, interval: int = 500
         raise exp.EaseNoSWTWorkbenchBotError
     BOT.waitUntil(ButtonWithLabelIsAvailable(label), timeout, interval)
     BOT.waitUntil(ButtonWithLabelIsEnabled(label), timeout, interval)
-    logger.debug(f"Click the identified button labelled '{label}'...")
+    logger.debug("Click the identified button labelled '%s'...", label)
     BOT.button(label).click()
 
 
 def clone_project_from_git(
-    git_repo_url: str, git_repo_branch: str, target_git_clone_dir: Path, depth: int = 1
+    git_repo_url: str,
+    git_repo_branch: str,
+    target_git_clone_dir: Path,
+    depth: int = 1,
 ):
     """Clone a Capella model from Git into a target directory.
 
@@ -441,8 +476,11 @@ def clone_project_from_git(
     if target_git_clone_dir.is_dir():
         shutil.rmtree(target_git_clone_dir, ignore_errors=True)
     logger.info(
-        f"Clone of project from '{git_repo_url}' (branch '{git_repo_branch}') "
-        f"with depth set to 1 into directory '{target_git_clone_dir}'..."
+        "Clone of project from '%s' (branch '%s') "
+        "with depth set to 1 into directory '%s'...",
+        git_repo_url,
+        git_repo_branch,
+        target_git_clone_dir,
     )
     try:
         git_cmd: list[str] = ["git", "clone"]
@@ -467,12 +505,14 @@ def clone_project_from_git(
             capture_output=True,
             cwd=target_git_clone_dir,
         )
-        logger.info(f"Switched to branch '{git_repo_branch}'.")
+        logger.info("Switched to branch '%s'.", git_repo_branch)
         return
     except subprocess.CalledProcessError as e:
         logger.info(
-            f"Switching to branch '{git_repo_branch}' for '{git_repo_url}' "
-            f" failed: {e.stderr}"
+            "Switching to branch '%s' for '%s' failed: %s",
+            git_repo_branch,
+            git_repo_url,
+            e.stderr,
         )
     try:
         subprocess.run(
@@ -481,7 +521,7 @@ def clone_project_from_git(
             capture_output=True,
             cwd=target_git_clone_dir,
         )
-        logger.info(f"Created branch '{git_repo_branch}'.")
+        logger.info("Created branch '%s'.", git_repo_branch)
     except subprocess.CalledProcessError as e:
         raise RuntimeError(
             f"Switching to branch '{git_repo_branch}' for '{git_repo_url}' "
@@ -508,7 +548,9 @@ def close_eclipse_view(title: str) -> None:
             view.close()
             break
     if not found_view:
-        logger.debug(f"Cannot close view titled '{title}'. View cannot be found.")
+        logger.debug(
+            "Cannot close view titled '%s'. View cannot be found.", title
+        )
 
 
 def connect_to_remote_t4c_model(
@@ -538,13 +580,18 @@ def connect_to_remote_t4c_model(
 
     """
     logger.info(
-        f"Connect to T4C model '{t4c_project_name}' in repository "
-        f"'{t4c_repo_name}@{t4c_repo_host}:{t4c_repo_port_no}'..."
+        "Connect to T4C model '%s' in repository '%s@%s:%s'...",
+        t4c_project_name,
+        t4c_repo_name,
+        t4c_repo_host,
+        t4c_repo_port_no,
     )
     BOT.menu("File").menu("New").menu("Other...").click()
     t4c_node: t.Any = BOT.tree().getTreeItem("Team for Capella")
     t4c_node.expand()
-    connect_to_remote_model: t.Any = t4c_node.getNode("Connect to remote model")
+    connect_to_remote_model: t.Any = t4c_node.getNode(
+        "Connect to remote model"
+    )
     connect_to_remote_model.doubleClick()
     fill_text_field_with_label("Repository Host:", t4c_repo_host)
     fill_text_field_with_label("Port Number:", t4c_repo_port_no)
@@ -580,28 +627,32 @@ def create_empty_workspace_with_ease_setup():
     workspace_str: str = os.getenv("EASE_WORKSPACE", "")
     if not workspace_str:
         raise OSError("Set the environment variable 'EASE_WORKSPACE'!")
-    workspace_path: Path = Path(workspace_str).resolve()
-    if workspace_path.is_dir():
-        if not os.access(workspace_path, os.W_OK):
+    workspace_path_: Path = Path(workspace_str).resolve()
+    if workspace_path_.is_dir():
+        if not os.access(workspace_path_, os.W_OK):
             raise OSError(
-                f"The directory '{workspace_path}' to create an EASE workspace "
+                f"The directory '{workspace_path_}' to create an EASE workspace "
                 "exists but we cannot recreate it (permissions)!"
             )
-        logger.info(f"Remove existing directory '{workspace_path}'...")
-        shutil.rmtree(workspace_path)
+        logger.info("Remove existing directory '%s'...", workspace_path_)
+        shutil.rmtree(workspace_path_)
     else:
         try:
-            logger.info(f"Create Eclipse workspace directory '{workspace_path}'...")
-            workspace_path.mkdir(parents=True)
+            logger.info(
+                "Create Eclipse workspace directory '%s'...", workspace_path_
+            )
+            workspace_path_.mkdir(parents=True)
         except OSError:
             logger.exception(
-                f"Cannot create the workspace directory '{workspace_path}'!"
+                "Cannot create the workspace directory '%s'!", workspace_path_
             )
 
     ease_scripts_location_str: str = os.getenv("EASE_SCRIPTS_LOCATION", "")
     if not ease_scripts_location_str:
         raise OSError("Set the environment variable 'EASE_SCRIPTS_LOCATION'!")
-    ease_scripts_location_path: Path = Path(ease_scripts_location_str).resolve()
+    ease_scripts_location_path: Path = Path(
+        ease_scripts_location_str
+    ).resolve()
     parent_dir: Path = ease_scripts_location_path.resolve().parent
     if not parent_dir.is_dir():
         raise ValueError(
@@ -612,48 +663,58 @@ def create_empty_workspace_with_ease_setup():
     logger.info("Set preferences for EASE:")
     # Create file that is needed to save the state of the workbench:
     root_dir: Path = Path(
-        workspace_path / ".metadata/.plugins/org.eclipse.core.resources/.root"
+        workspace_path_ / ".metadata/.plugins/org.eclipse.core.resources/.root"
     )
-    logger.debug(f"Create directory '{root_dir}'...")
+    logger.debug("Create directory '%s'...", root_dir)
     root_dir.mkdir(parents=True)
     tree_file_path: Path = Path(root_dir / "1.tree")
     logger.debug(
-        f"Create empty file '{tree_file_path}' needed to "
-        "save the state of the workbench..."
+        "Create empty file '%s' needed to save the state of the workbench...",
+        tree_file_path,
     )
     tree_file_path.touch()
 
     # Create settings dir for the preferences we prepare in the following:
-    settings_dir: Path = workspace_path / (
+    settings_dir: Path = workspace_path_ / (
         ".metadata/.plugins/org.eclipse.core.runtime/.settings"
     )
-    logger.debug(f"Create directory '{settings_dir}'...")
+    logger.debug("Create directory '%s'...", settings_dir)
     settings_dir.mkdir(parents=True)
 
     # set path to Python interpreter to be used by EASE:
-    py4j_file_path: Path = settings_dir / "org.eclipse.ease.lang.python.py4j.prefs"
-    logger.debug(f"Create file '{py4j_file_path}'...")
-    logger.info(f"\t- Python interpreter: '{sys.executable}'")
+    py4j_file_path: Path = (
+        settings_dir / "org.eclipse.ease.lang.python.py4j.prefs"
+    )
+    logger.debug("Create file '%s'...", py4j_file_path)
+    logger.info("\t- Python interpreter: '%s'", sys.executable)
     python_exe: str = sys.executable.replace("\\", "\\\\")
     Path(py4j_file_path).write_text(
         "eclipse.preferences.version=1\n"
-        f"org.eclipse.ease.lang.python.py4j.INTERPRETER={python_exe}\n"
+        f"org.eclipse.ease.lang.python.py4j.INTERPRETER={python_exe}\n",
+        encoding="utf8",
     )
 
     # set default location for EASE scripts:
-    ease_scripts_file_path: Path = settings_dir / "org.eclipse.ease.ui.scripts.prefs"
-    logger.debug(f"Create file '{ease_scripts_file_path}'...")
+    ease_scripts_file_path: Path = (
+        settings_dir / "org.eclipse.ease.ui.scripts.prefs"
+    )
+    logger.debug("Create file '%s'...", ease_scripts_file_path)
     logger.info(
-        f"\t- Default location for EASE scripts: '{ease_scripts_location_path}'"
+        "\t- Default location for EASE scripts: '%s'",
+        ease_scripts_location_path,
     )
     module_dir_pipe_separated: str = (
-        str(ease_scripts_location_path).replace(os.sep, "|").replace(":", "\\:")
+        str(ease_scripts_location_path)
+        .replace(os.sep, "|")
+        .replace(":", "\\:")
     )
     if not module_dir_pipe_separated.startswith("|"):
         module_dir_pipe_separated = f"|{module_dir_pipe_separated}"
 
     module_dir: str = (
-        str(ease_scripts_location_path).replace(os.sep, "/").replace(":", "\\:")
+        str(ease_scripts_location_path)
+        .replace(os.sep, "/")
+        .replace(":", "\\:")
     )
     if not module_dir.startswith("/"):
         module_dir = f"/{module_dir}"
@@ -661,23 +722,25 @@ def create_empty_workspace_with_ease_setup():
         "eclipse.preferences.version=1\n"
         f"file\\:||{module_dir_pipe_separated}/default=true\n"
         f"file\\:||{module_dir_pipe_separated}/location=file\\://{module_dir}\n"
-        f"file\\:||{module_dir_pipe_separated}/recursive=true\n"
+        f"file\\:||{module_dir_pipe_separated}/recursive=true\n",
+        encoding="utf8",
     )
 
     # allow scripts to run code in UI thread:
     ease_prefs_file_path: Path = settings_dir / "org.eclipse.ease.prefs"
     logger.info("\t- Allow scripts to run code in UI thread")
-    logger.debug(f"Create file '{ease_prefs_file_path}'...")
+    logger.debug("Create file '%s'...", ease_prefs_file_path)
     Path(ease_prefs_file_path).write_text(
         "eclipse.preferences.version=1\n"
         "scripts/scriptRemoteAccess=false\n"
-        "scripts/scriptUIAccess=true\n"
+        "scripts/scriptUIAccess=true\n",
+        encoding="utf8",
     )
     # disable UI theme:
     swt_prefs_file_path: Path = settings_dir / (
         "org.eclipse.e4.ui.workbench.renderers.swt.prefs"
     )
-    logger.debug(f"Create file '{swt_prefs_file_path}'...")
+    logger.debug("Create file '%s'...", swt_prefs_file_path)
     logger.info("Set general Eclipse preferences:")
     logger.info("\t- Disable UI theme")
     Path(swt_prefs_file_path).write_text(
@@ -685,12 +748,13 @@ def create_empty_workspace_with_ease_setup():
     )
     # disable exit prompt:
     ide_prefs_file_path: Path = settings_dir / "org.eclipse.ui.ide.prefs"
-    logger.debug(f"Create file '{ide_prefs_file_path}'...")
+    logger.debug("Create file '%s'...", ide_prefs_file_path)
     logger.info("\t- Disable exit prompt")
     Path(ide_prefs_file_path).write_text(
         "EXIT_PROMPT_ON_CLOSE_LAST_WINDOW=false\n"
         "eclipse.preferences.version=1\n"
-        "quickStart=false\n"
+        "quickStart=false\n",
+        encoding="utf8",
     )
 
 
@@ -712,10 +776,14 @@ def fill_text_field_with_label(label: str, text: str):
     """
     if BOT is None:
         raise exp.EaseNoSWTWorkbenchBotError
-    logger.debug(f"Wait for text field labelled '{label}'...")
+    logger.debug("Wait for text field labelled '%s'...", label)
     BOT.waitUntil(TextfieldWithLabelIsAvailable(label), 5000, 100)
     textfield: t.Any = BOT.textWithLabel(label)
-    logger.debug(f"Set the content of the text field labelled '{label}' to '{text}'...")
+    logger.debug(
+        "Set the content of the text field labelled '%s' to '%s'...",
+        label,
+        text,
+    )
     textfield.setText(text)
 
 
@@ -728,7 +796,7 @@ def import_git_project_from_folder(tmp_git_clone_dir: Path):
         Temporary path as target for git clone
 
     """
-    logger.info(f"Import Git project from folder ('{tmp_git_clone_dir}')...")
+    logger.info("Import Git project from folder ('%s')...", tmp_git_clone_dir)
     BOT.menu("File").menu("Import...").click()
     git_node: t.Any = BOT.tree().getTreeItem("General")
     git_node.select()
@@ -767,8 +835,11 @@ def import_model_from_remote_repository(
 
     """
     logger.info(
-        f"Connect to T4C model '{t4c_project_name}' in repository "
-        f"'{t4c_repo_name}@{t4c_repo_host}:{t4c_repo_port_no}'..."
+        "Connect to T4C model '%s' in repository " "'%s@%s:%s'...",
+        t4c_project_name,
+        t4c_repo_name,
+        t4c_repo_host,
+        t4c_repo_port_no,
     )
     BOT.menu("File").menu("Import...").click()
     t4c_node: t.Any = BOT.tree().getTreeItem("Team for Capella")
@@ -853,7 +924,9 @@ def kill_capella_process(signal: int = 9):
 
     """
     for line in (
-        subprocess.check_output(["ps", "-eo", "pid,comm"]).decode("utf8").splitlines()
+        subprocess.check_output(["ps", "-eo", "pid,comm"])
+        .decode("utf8")
+        .splitlines()
     ):
         if "capella" in line.lower():
             match: t.Optional[re.Match] = re.match(r"(.*?)(\d+)(.*?)", line)
@@ -864,10 +937,12 @@ def kill_capella_process(signal: int = 9):
             try:
                 subprocess.check_call(["kill", "-" + str(signal), pid])
                 logger.info(
-                    f"Killed Capella process with PID {pid} by sending signal {signal}."
+                    "Killed Capella process with PID %s by sending signal %d.",
+                    pid,
+                    signal,
                 )
             except subprocess.CalledProcessError as e:
-                logger.exception(f"Could not kill Capella process: {e}")
+                logger.exception("Could not kill Capella process: %s", e)
 
 
 def log_intro_messages():
@@ -877,10 +952,11 @@ def log_intro_messages():
     Give a hint that one can enable debug level logging via an environment variable.
 
     """
-    logger.info(f"Executed by: '{sys.executable}'.")
+    logger.info("Executed by: '%s'.", sys.executable)
     logger.info(
-        f"Running with debug mode {'enabled' if DEBUG else 'disabled'} "
-        f"{'in' if IS_EASE_CTXT else 'not in'} EASE context."
+        "Running with debug mode %s " "%s EASE context.",
+        "enabled" if DEBUG else "disabled",
+        "in" if IS_EASE_CTXT else "not in",
     )
     if not DEBUG:
         logger.info(
@@ -888,14 +964,17 @@ def log_intro_messages():
             "level logging!\n"
         )
     if IS_EASE_CTXT:
-        logger.info(f"Capella is{'' if isHeadless() else ' not'} run headless.")  # type: ignore # noqa
+        logger.info(
+            "Capella is%s run headless.", "" if isHeadless() else " not"
+        )
         timeout: int = getSystemProperty("org.eclipse.swtbot.search.timeout")
         logger.debug(
-            f"System property 'org.eclipse.swtbot.search.timeout' is: {timeout} ms."
+            "System property 'org.eclipse.swtbot.search.timeout' is: %s ms.",
+            timeout,
         )
 
 
-def log_to_file(log_file_path: Path, mode: str = "w"):
+def log_to_file(log_file_path_: Path, mode: str = "w"):
     """Add logging to a file and log the path to the log file.
 
     Debug level will be INFO (default) or DEBUG, when an environment variable
@@ -914,14 +993,14 @@ def log_to_file(log_file_path: Path, mode: str = "w"):
 
     """
     file_hdl: logging.Handler = logging.FileHandler(
-        filename=str(log_file_path), mode=mode
+        filename=str(log_file_path_), mode=mode
     )
     file_hdl.setLevel("DEBUG" if DEBUG else "INFO")
     file_hdl.setFormatter(formatter)
     file_hdl.addFilter(_MyLoggingFilter())
     logger.addHandler(file_hdl)
     if mode == "w":
-        logger.info(f"Log to '{log_file_path}'...")
+        logger.info("Log to '%s'...", log_file_path_)
 
 
 def open_eclipse_perspective(name: str):
@@ -938,16 +1017,19 @@ def open_eclipse_perspective(name: str):
     BOT.menu("Window").menu("Perspective").menu("Open Perspective").menu(
         "Other..."
     ).click()
-    logger.debug(f"Try to find Eclipse perspective '{name}'...")
+    logger.debug("Try to find Eclipse perspective '%s'...", name)
     if not BOT.table().containsItem(name):
         logger.debug(
-            f"Cannot find Eclipse perspective '{name}' "
-            f"will search for '{name} (default)'..."
+            "Cannot find Eclipse perspective '%s' "
+            "will search for '%s (default)'...",
+            name,
+            name,
         )
         name = f"{name} (default)"
     if not BOT.table().containsItem(name):
         raise RuntimeError(
-            f"Cannot find any Eclipse perspective '{name}' or " f"'{name} (default)'!"
+            f"Cannot find any Eclipse perspective '{name}' or "
+            f"'{name} (default)'!"
         )
     try:
         BOT.table().getTableItem(name).select()
@@ -955,7 +1037,7 @@ def open_eclipse_perspective(name: str):
         raise RuntimeError(
             f"Failed when selecting Eclipse perspective '{name}' to be opened!"
         ) from e
-    logger.info(f"Open Eclipse perspective '{name}'...")
+    logger.info("Open Eclipse perspective '%s'...", name)
     click_button_with_label("Open")
 
 
@@ -974,7 +1056,7 @@ def open_eclipse_view(category: str, title: str):
         raise exp.EaseNoSWTWorkbenchBotError
     if is_eclipse_view_shown(title):
         return
-    logger.debug(f"Show Eclipse view '{category}/{title}'...")
+    logger.debug("Show Eclipse view '%s/%s'...", category, title)
     BOT.menu("Window").menu("Show View").menu("Other...").click()
     category_node: t.Any = BOT.tree().getTreeItem(category)
     category_node.expand()
@@ -993,8 +1075,8 @@ def project_explorer_tree() -> t.Any:
     """
     project_explorer_view: t.Any = BOT.viewByTitle("Project Explorer")
     project_explorer_bot: t.Any = project_explorer_view.bot()
-    project_explorer_tree: t.Any = project_explorer_bot.tree()
-    return project_explorer_tree
+    project_explorer_tree_: t.Any = project_explorer_bot.tree()
+    return project_explorer_tree_
 
 
 def workspace_path() -> Path:
@@ -1012,5 +1094,5 @@ def workspace_path() -> Path:
 if __name__ == "__main__":
     log_file_dir: str = os.getenv("EASE_LOG_FILE_DIR", str(Path()))
     log_file_path: Path = Path(log_file_dir) / "ease.log"
-    log_to_file(log_file_path=log_file_path)
+    log_to_file(log_file_path_=log_file_path)
     create_empty_workspace_with_ease_setup()
