@@ -69,11 +69,11 @@ MODULE_DIR: Path = Path(__file__).parents[0]
 
 try:
     BOT = org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot()  # type: ignore
-    # pylint: disable-next=line-too-long
     """
-    see https://download.eclipse.org/technology/swtbot/galileo/dev-build/apidocs/org/eclipse/swtbot/eclipse/finder/SWTWorkbenchBot.html
-    see https://download.eclipse.org/technology/swtbot/galileo/dev-build/apidocs/org/eclipse/swtbot/swt/finder/SWTBot.html
-    see https://www.eclipse.org/swt/widgets/
+    see
+    https://download.eclipse.org/technology/swtbot/galileo/dev-build/apidocs/org/eclipse/swtbot/eclipse/finder/SWTWorkbenchBot.html
+    https://download.eclipse.org/technology/swtbot/galileo/dev-build/apidocs/org/eclipse/swtbot/swt/finder/SWTBot.html
+    https://www.eclipse.org/swt/widgets/
 
     """
     # 3rd party:
