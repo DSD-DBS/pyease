@@ -120,7 +120,6 @@ disable = [
   # Auto-formatting
   "bad-indentation",
   "inconsistent-quotes",
-  "line-too-long",
   "missing-final-newline",
   "mixed-line-endings",
   "multiple-imports",
