@@ -77,11 +77,9 @@ try:
 
     """
     # 3rd party:
-    from eclipse.system.platform import (  # type: ignore # noqa
-        getSystemProperty,
-    )
-    from eclipse.system.resources import getWorkspace  # type: ignore # noqa
-    from eclipse.system.ui import isHeadless  # type: ignore # noqa
+    from eclipse.system.platform import getSystemProperty  # type: ignore
+    from eclipse.system.resources import getWorkspace  # type: ignore
+    from eclipse.system.ui import isHeadless  # type: ignore
 except NameError:
     IS_EASE_CTXT = False
 
@@ -93,9 +91,7 @@ class _MyLoggingFilter(logging.Filter):
     def __init__(self):
         super().__init__()
 
-    def filter(
-        self, record
-    ):  # noqa:A003 "'filter' is shadowing a python builtin"
+    def filter(self, record):
         filter_: bool = any(
             (
                 record.msg.startswith("Command to send: "),
@@ -134,20 +130,35 @@ logger.addHandler(console_hdl)
 
 
 class ButtonWithLabelIsAvailable:
-    # pylint: disable-next=line-too-long
-    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""
+    """Implement condition that a labelled button is available.
 
-    def __init__(self, label):
-        """Construct class."""
+    .. seealso::
+
+        https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/ICondition.html
+
+    """
+
+    def __init__(self, label: str):
+        """Initialise the condition and introduce/ set class attributes.
+
+        Attributes
+        ----------
+        bot
+            ``SWTBot`` instance that will be set in ``init`` at runtime
+        label
+            Label of the button for which this condition checks the
+            availability
+
+        """
         self.bot = None
         self.label = label
 
     def init(self, bot):
-        """Implement Java constructor."""
+        """Initialise the condition with a given ``SWTBot`` instance."""
         self.bot = bot
 
     def test(self) -> bool:
-        """Test the condition (if button with label is accessible)."""
+        """Test if labelled button is available."""
         try:
             self.bot.button(self.label)  # type: ignore
             logger.debug("Button labelled '%s' is available.", self.label)
@@ -156,8 +167,8 @@ class ButtonWithLabelIsAvailable:
             return False
         return True
 
-    def getFailureMessage(self):
-        """Define message that will be raised when the timeout reached."""
+    def getFailureMessage(self) -> str:
+        """Get the failure message when a test fails (returns False)."""
         return f"Could not find a button labelled '{self.label}'!"
 
     class Java:
@@ -167,20 +178,35 @@ class ButtonWithLabelIsAvailable:
 
 
 class ButtonWithLabelIsEnabled:
-    # pylint: disable-next=line-too-long
-    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""
+    """Implement condition that a labelled button is enabled.
 
-    def __init__(self, label):
-        """Construct class."""
+    .. seealso::
+
+        https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/ICondition.html
+
+    """
+
+    def __init__(self, label: str):
+        """Initialise the condition and introduce/ set class attributes.
+
+        Attributes
+        ----------
+        bot
+            ``SWTBot`` instance that will be set in ``init`` at runtime
+        label
+            Label of the button for which this condition checks the
+            state
+
+        """
         self.bot = None
         self.label = label
 
     def init(self, bot):
-        """Implement Java constructor."""
+        """Initialise the condition with a given ``SWTBot`` instance."""
         self.bot = bot
 
     def test(self) -> bool:
-        """Test the condition (if button with label is accessible)."""
+        """Test if labelled button is enabled."""
         button: t.Any = self.bot.button(self.label)  # type: ignore
         enabled: bool = button.isEnabled()
         logger.debug(
@@ -190,8 +216,8 @@ class ButtonWithLabelIsEnabled:
         )
         return enabled
 
-    def getFailureMessage(self):
-        """Define message that will be raised when the timeout reached."""
+    def getFailureMessage(self) -> str:
+        """Get the failure message when a test fails (returns False)."""
         return f"Could not find a button labelled '{self.label}'!"
 
     class Java:
@@ -201,20 +227,35 @@ class ButtonWithLabelIsEnabled:
 
 
 class ButtonWithLabelIsNotAvailable:
-    # pylint: disable-next=line-too-long
-    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""
+    """Implement condition that a labelled button is not available.
+
+    .. seealso::
+
+        https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/ICondition.html
+
+    """
 
     def __init__(self, label: str):
-        """Construct class."""
+        """Initialise the condition and introduce/ set class attributes.
+
+        Attributes
+        ----------
+        bot
+            ``SWTBot`` instance that will be set in ``init`` at runtime
+        label
+            Label of the button for which this condition checks the
+            state
+
+        """
         self.bot = None
         self.label = label
 
     def init(self, bot: t.Any) -> None:
-        """Implement Java constructor."""
+        """Initialise the condition with a given ``SWTBot`` instance."""
         self.bot = bot
 
     def test(self) -> bool:
-        """Test the condition (if button with label is accessible)."""
+        """Test if labelled button is not available."""
         try:
             self.bot.button(self.label)  # type: ignore
             logger.debug("Button labelled '%s' is available.", self.label)
@@ -224,7 +265,7 @@ class ButtonWithLabelIsNotAvailable:
             return True
 
     def getFailureMessage(self) -> str:
-        """Define message that will be raised when the timeout reached."""
+        """Get the failure message when a test fails (returns False)."""
         return f"Could not find a button labelled '{self.label}'!"
 
     class Java:
@@ -234,20 +275,35 @@ class ButtonWithLabelIsNotAvailable:
 
 
 class ComboBoxWithLabelIsAvailable:
-    # pylint: disable-next=line-too-long
-    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""
+    """Implement condition that a labelled combo box is available.
 
-    def __init__(self, label):
-        """Construct class."""
+    .. seealso::
+
+        https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/ICondition.html
+
+    """
+
+    def __init__(self, label: str):
+        """Initialise the condition and introduce/ set class attributes.
+
+        Attributes
+        ----------
+        bot
+            ``SWTBot`` instance that will be set in ``init`` at runtime
+        label
+            Label of the combo box for which this condition checks the
+            availability
+
+        """
         self.bot = None
         self.label = label
 
     def init(self, bot):
-        """Implement Java constructor."""
+        """Initialise the condition with a given ``SWTBot`` instance."""
         self.bot = bot
 
     def test(self) -> bool:
-        """Test the condition (if combo box with label is accessible)."""
+        """Test if labelled combobox is available."""
         try:
             self.bot.comboBoxWithLabel(self.label)  # type: ignore
             logger.debug("Combo box labelled '%s' is available.", self.label)
@@ -258,8 +314,8 @@ class ComboBoxWithLabelIsAvailable:
             return False
         return True
 
-    def getFailureMessage(self):
-        """Define message that will be raised when the timeout reached."""
+    def getFailureMessage(self) -> str:
+        """Get the failure message when a test fails (returns False)."""
         return f"Could not find a combo box labelled '{self.label}'!"
 
     class Java:
@@ -269,20 +325,39 @@ class ComboBoxWithLabelIsAvailable:
 
 
 class CompareResultIsAvailable:
-    # pylint: disable-next=line-too-long
-    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""
+    """Implement condition that a labelled compare result is available.
 
-    def __init__(self, label):
-        """Construct class."""
+    The compare result is an Eclipse editor that can appear when the
+    command ``Compare with -> Each Other as models`` has been run in the
+    tool Capella.
+
+    .. seealso::
+
+        https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/ICondition.html
+
+    """
+
+    def __init__(self, label: str):
+        """Initialise the condition and introduce/ set class attributes.
+
+        Attributes
+        ----------
+        bot
+            ``SWTBot`` instance that will be set in ``init`` at runtime
+        label
+            Label of the compare result for which this condition checks
+            the availability
+
+        """
         self.bot = None
         self.label = label
 
     def init(self, bot):
-        """Implement Java constructor."""
+        """Initialise the condition with a given ``SWTBot`` instance."""
         self.bot = bot
 
     def test(self) -> bool:
-        """Test the condition."""
+        """Test if labelled compare result is available."""
         try:
             BOT.button("OK").click()
         except Exception:
@@ -299,8 +374,8 @@ class CompareResultIsAvailable:
         except Exception:
             return False
 
-    def getFailureMessage(self):
-        """Define message that will be raised when the timeout reached."""
+    def getFailureMessage(self) -> str:
+        """Get the failure message when a test fails (returns False)."""
         return "Cannot access compare result!"
 
     class Java:
@@ -310,28 +385,43 @@ class CompareResultIsAvailable:
 
 
 class MenuIsAvailable:
-    # pylint: disable-next=line-too-long
-    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""
+    """Implement condition that a menu (item) is available.
 
-    def __init__(self, label):
-        """Construct class."""
+    .. seealso::
+
+        https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/ICondition.html
+
+    """
+
+    def __init__(self, label: str):
+        """Initialise the condition and introduce/ set class attributes.
+
+        Attributes
+        ----------
+        bot
+            ``SWTBot`` instance that will be set in ``init`` at runtime
+        label
+            Label of the menu (item) for which this condition checks the
+            availability
+
+        """
         self.bot = None
         self.label = label
 
     def init(self, bot):
-        """Implement Java constructor."""
+        """Initialise the condition with a given ``SWTBot`` instance."""
         self.bot = bot
 
     def test(self) -> bool:
-        """Test the condition (if menu with label is accessible)."""
+        """Test if labelled menu (item) is available."""
         try:
             self.bot.menu(self.label)  # type: ignore
         except Exception:
             return False
         return True
 
-    def getFailureMessage(self):
-        """Define message that will be raised when the timeout reached."""
+    def getFailureMessage(self) -> str:
+        """Get the failure message when a test fails (returns False)."""
         return f"Could not find the menu labelled '{self.label}'!"
 
     class Java:
@@ -341,20 +431,35 @@ class MenuIsAvailable:
 
 
 class TextfieldWithLabelIsAvailable:
-    # pylint: disable-next=line-too-long
-    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""
+    """Implement condition that a labelled textfield is available.
 
-    def __init__(self, label):
-        """Construct class."""
+    .. seealso::
+
+        https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/ICondition.html
+
+    """
+
+    def __init__(self, label: str):
+        """Initialise the condition and introduce/ set class attributes.
+
+        Attributes
+        ----------
+        bot
+            ``SWTBot`` instance that will be set in ``init`` at runtime
+        label
+            Label of the textfield for which this condition checks the
+            availability
+
+        """
         self.bot = None
         self.label = label
 
     def init(self, bot):
-        """Implement Java constructor."""
+        """Initialise the condition with a given ``SWTBot`` instance."""
         self.bot = bot
 
     def test(self) -> bool:
-        """Test the condition (if text field with label is accessible)."""
+        """Test if labelled textfield is available."""
         try:
             self.bot.textWithLabel(self.label)  # type: ignore
             logger.debug("Text field labelled '%s' is available.", self.label)
@@ -365,8 +470,8 @@ class TextfieldWithLabelIsAvailable:
             return False
         return True
 
-    def getFailureMessage(self):
-        """Define message that will be raised when the timeout reached."""
+    def getFailureMessage(self) -> str:
+        """Get the failure message when a test fails (returns False)."""
         return f"Could not find a text field labelled '{self.label}'!"
 
     class Java:
@@ -376,21 +481,39 @@ class TextfieldWithLabelIsAvailable:
 
 
 class TreeItemWithLabelMatchingRegExIsAvailable:
-    # pylint: disable-next=line-too-long
-    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""
+    """Implement condition that a tree item is available.
+
+    .. seealso::
+
+        https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/ICondition.html
+
+    """
 
     def __init__(self, tree: t.Any, label_regex: str):
-        """Construct class."""
+        """Initialise the condition and introduce/ set class attributes.
+
+        Attributes
+        ----------
+        bot
+            ``SWTBot`` instance that will be set in ``init`` at runtime
+        tree
+            ``SWTBotTree`` instance for which this condition checks the
+            availability of a tree item
+        label_regex
+            RegEx for a label of a tree item in the *tree* for which
+            this condition checks the availability
+
+        """
         self.bot = None
         self.tree = tree
         self.label_regex = label_regex
 
     def init(self, bot):
-        """Implement Java constructor."""
+        """Initialise the condition with a given ``SWTBot`` instance."""
         self.bot = bot
 
     def test(self) -> bool:
-        """Test the condition (if tree item with label is accessible)."""
+        """Test if labelled tree item is available."""
         tree_item: t.Any
         tree_item_name: str
         for tree_item in self.tree.getAllItems():
@@ -407,9 +530,12 @@ class TreeItemWithLabelMatchingRegExIsAvailable:
         )
         return False
 
-    def getFailureMessage(self):
-        """Define message that will be raised when the timeout reached."""
-        return f"Could not find a tree item labelled '{self.label}'!"  # type: ignore
+    def getFailureMessage(self) -> str:
+        """Get the failure message when a test fails (returns False)."""
+        return (
+            "Could not find a tree item with a label matching "
+            f"the regular expression '{self.label_regex}'!"
+        )
 
     class Java:
         """Implement Java interface."""
