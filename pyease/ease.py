@@ -76,7 +76,6 @@ try:
     see https://www.eclipse.org/swt/widgets/
 
     """
-    # pylint: enable=line-too-long
     # 3rd party:
     from eclipse.system.platform import (  # type: ignore # noqa
         getSystemProperty,
