@@ -15,7 +15,7 @@ import typing as t
 
 logger: logging.Logger = logging.getLogger()
 
-# pylint: disable=super-init-not-called
+
 class EaseError(Exception):
     """Raised when an unexpected error occurred."""
 
@@ -23,7 +23,8 @@ class EaseError(Exception):
 class EaseButtonClickError(EaseError):
     """Raised when a button cannot be clicked."""
 
-    def __init__(self, button: str):
+    def __init__(self, button: t.Any):
+        super().__init__()
         self.button: t.Any = button
 
     def __str__(self):
@@ -37,6 +38,7 @@ class EaseButtonNotFoundError(EaseError):
     """Raised when a button cannot be found by a specified label."""
 
     def __init__(self, label: str):
+        super().__init__()
         self.label: str = label
 
     def __str__(self):
