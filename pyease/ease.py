@@ -69,7 +69,7 @@ MODULE_DIR: Path = Path(__file__).parents[0]
 
 try:
     BOT = org.eclipse.swtbot.eclipse.finder.SWTWorkbenchBot()  # type: ignore
-    # pylint: disable=line-too-long
+    # pylint: disable-next=line-too-long
     """
     see https://download.eclipse.org/technology/swtbot/galileo/dev-build/apidocs/org/eclipse/swtbot/eclipse/finder/SWTWorkbenchBot.html
     see https://download.eclipse.org/technology/swtbot/galileo/dev-build/apidocs/org/eclipse/swtbot/swt/finder/SWTBot.html
@@ -135,9 +135,8 @@ logger.addHandler(console_hdl)
 
 
 class ButtonWithLabelIsAvailable:
-    # pylint: disable=line-too-long
-    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""  # noqa: E501,W505
-    # pylint: enable=line-too-long
+    # pylint: disable-next=line-too-long
+    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""
 
     def __init__(self, label):
         """Construct class."""
@@ -169,9 +168,8 @@ class ButtonWithLabelIsAvailable:
 
 
 class ButtonWithLabelIsEnabled:
-    # pylint: disable=line-too-long
-    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""  # noqa: E501,W505
-    # pylint: enable=line-too-long
+    # pylint: disable-next=line-too-long
+    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""
 
     def __init__(self, label):
         """Construct class."""
@@ -204,9 +202,8 @@ class ButtonWithLabelIsEnabled:
 
 
 class ButtonWithLabelIsNotAvailable:
-    # pylint: disable=line-too-long
-    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""  # noqa: E501,W505
-    # pylint: enable=line-too-long
+    # pylint: disable-next=line-too-long
+    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""
 
     def __init__(self, label: str):
         """Construct class."""
@@ -238,9 +235,8 @@ class ButtonWithLabelIsNotAvailable:
 
 
 class ComboBoxWithLabelIsAvailable:
-    # pylint: disable=line-too-long
-    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""  # noqa: E501,W505
-    # pylint: enable=line-too-long
+    # pylint: disable-next=line-too-long
+    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""
 
     def __init__(self, label):
         """Construct class."""
@@ -315,9 +311,8 @@ class CompareResultIsAvailable:
 
 
 class MenuIsAvailable:
-    # pylint: disable=line-too-long
-    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""  # noqa: E501,W505
-    # pylint: enable=line-too-long
+    # pylint: disable-next=line-too-long
+    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""
 
     def __init__(self, label):
         """Construct class."""
@@ -347,9 +342,8 @@ class MenuIsAvailable:
 
 
 class TextfieldWithLabelIsAvailable:
-    # pylint: disable=line-too-long
-    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""  # noqa: E501,W505
-    # pylint: enable=line-too-long
+    # pylint: disable-next=line-too-long
+    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""
 
     def __init__(self, label):
         """Construct class."""
@@ -383,9 +377,8 @@ class TextfieldWithLabelIsAvailable:
 
 
 class TreeItemWithLabelMatchingRegExIsAvailable:
-    # pylint: disable=line-too-long
-    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""  # noqa: E501,W505
-    # pylint: enable=line-too-long
+    # pylint: disable-next=line-too-long
+    """https://download.eclipse.org/technology/swtbot/helios/dev-build/apidocs/org/eclipse/swtbot/swt/finder/waits/DefaultCondition.html"""
 
     def __init__(self, tree: t.Any, label_regex: str):
         """Construct class."""
