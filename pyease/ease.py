@@ -907,23 +907,23 @@ def fill_text_field_with_label(label: str, text: str):
     textfield.setText(text)
 
 
-def import_git_project_from_folder(tmp_git_clone_dir: Path):
-    """Import temporary cloned Git project from folder into Capella workspace.
+def import_project_from_folder(path: Path):
+    """Import project from folder into Capella workspace.
 
     Parameters
     ----------
-    tmp_git_clone_dir
-        Temporary path as target for git clone
+    path
+        Path to directory with project
 
     """
-    logger.info("Import Git project from folder ('%s')...", tmp_git_clone_dir)
+    logger.info("Import project from folder ('%s')...", path)
     BOT.menu("File").menu("Import...").click()
-    git_node: t.Any = BOT.tree().getTreeItem("General")
-    git_node.select()
-    git_node.expand()
-    git_node.getNode("Projects from Folder or Archive").doubleClick()
+    general_node: t.Any = BOT.tree().getTreeItem("General")
+    general_node.select()
+    general_node.expand()
+    general_node.getNode("Projects from Folder or Archive").doubleClick()
     combo_box: t.Any = BOT.comboBox(0)
-    combo_box.setText(str(tmp_git_clone_dir))
+    combo_box.setText(str(path))
     click_button_with_label(label="Finish", timeout=60000, interval=500)
     BOT.waitUntil(MenuIsAvailable("File"), 600000, 500)
 
