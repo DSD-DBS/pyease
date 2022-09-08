@@ -128,6 +128,17 @@ console_hdl.setFormatter(formatter)
 console_hdl.addFilter(_MyLoggingFilter())
 logger.addHandler(console_hdl)
 
+# Also log to docker's log:
+DOCKER_LOG_PATH: Path = Path("/proc/1/fd/1")
+if DOCKER_LOG_PATH.exists():
+    docker_hdl: logging.Handler = logging.FileHandler(
+        filename=DOCKER_LOG_PATH, mode="w"
+    )
+    docker_hdl.setLevel("DEBUG" if DEBUG else "INFO")
+    docker_hdl.setFormatter(formatter)
+    docker_hdl.addFilter(_MyLoggingFilter())
+    logger.addHandler(docker_hdl)
+
 
 class ButtonWithLabelIsAvailable:
     """Implement condition that a labelled button is available.
