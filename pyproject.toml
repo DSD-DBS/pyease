@@ -33,6 +33,17 @@ Homepage = "https://github.com/DSD-DBS/pyease"
 Documentation = "https://dsd-dbs.github.io/pyease"
 
 [project.optional-dependencies]
+dev = [
+  "black",
+  "ipython",
+  "mccabe",
+  "pdbpp @ git+https://github.com/pdbpp/pdbpp.git",
+  "pylint",
+  "pyls-isort",
+  "pylsp-mypy",
+  "python-lsp-black",
+  "python-lsp-server",
+]
 docs = [
   "sphinx",
   "sphinx-rtd-theme",
