@@ -37,7 +37,7 @@ dev = [
   "black",
   "ipython",
   "mccabe",
-  "pdbpp @ git+https://github.com/pdbpp/pdbpp.git",
+  "pdbpp",
   "pylint",
   "pyls-isort",
   "pylsp-mypy",
