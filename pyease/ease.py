@@ -765,8 +765,12 @@ def create_empty_workspace_with_ease_setup():
                 f"The directory '{workspace_path_}' to create an EASE workspace "
                 "exists but we cannot recreate it (permissions)!"
             )
-        logger.info("Remove existing directory '%s'...", workspace_path_)
-        shutil.rmtree(workspace_path_)
+        if os.listdir(workspace_path_):
+            logger.info(
+                "Remove existing and not-empty directory '%s'...",
+                workspace_path_,
+            )
+            shutil.rmtree(workspace_path_)
     else:
         try:
             logger.info(
