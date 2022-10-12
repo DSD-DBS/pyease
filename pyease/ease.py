@@ -1055,15 +1055,20 @@ def kill_capella_process(signal: int = 9):
     * ``eclipse.system.ui.shutdown()``
 
     might not stop the Capella process. Here is an agressive solution to kill
-    the Capella process if needed.
+    the Capella process and according Java processes if needed.
+
+    Parameters
+    ----------
+    signal : optional
+        Kill signal that will be sent to Capella.
 
     """
     for line in (
-        subprocess.check_output(["ps", "-eo", "pid,comm"])
+        subprocess.check_output(["ps", "-eo", "pid,command"])
         .decode("utf8")
         .splitlines()
     ):
-        if "capella" in line.lower():
+        if "capella" in line.lower() and "python" not in line.lower():
             match: t.Optional[re.Match] = re.match(r"(.*?)(\d+)(.*?)", line)
             if match is None:
                 logger.error("Cannot identify PID of Capella process!")
