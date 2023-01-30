@@ -11,7 +11,7 @@ dynamic = ["version"]
 name = "pyease"
 description = "Python Library with helpful functions for the Eclipse Advanced Scripting Environment (EASE). See https://www.eclipse.org/ease"
 readme = "README.rst"
-requires-python = ">=3.9, <3.11"
+requires-python = ">=3.10, <3.12"
 license = { text = "Apache-2.0" }
 authors = [
   { name = "DB Netz AG" },
@@ -47,7 +47,7 @@ dev = [
 docs = [
   "sphinx",
   "sphinx-rtd-theme",
-  "tomli; python_version<'3.11'",
+  "tomli; python_version<'3.12'",
 ]
 
 test = [
@@ -57,7 +57,7 @@ test = [
 
 [tool.black]
 line-length = 79
-target-version = ["py39"]
+target-version = ["py310"]
 
 [tool.isort]
 profile = 'black'
@@ -69,7 +69,7 @@ no_implicit_optional = true
 show_error_codes = true
 warn_redundant_casts = true
 warn_unreachable = true
-python_version = "3.9"
+python_version = "3.10"
 
 [[tool.mypy.overrides]]
 module = ["tests.*"]
