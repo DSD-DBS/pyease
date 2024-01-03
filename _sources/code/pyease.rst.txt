@@ -1,0 +1,29 @@
+pyease package
+==============
+
+Submodules
+----------
+
+pyease.ease module
+------------------
+
+.. automodule:: pyease.ease
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+pyease.easeexceptions module
+----------------------------
+
+.. automodule:: pyease.easeexceptions
+   :members:
+   :undoc-members:
+   :show-inheritance:
+
+Module contents
+---------------
+
+.. automodule:: pyease
+   :members:
+   :undoc-members:
+   :show-inheritance:

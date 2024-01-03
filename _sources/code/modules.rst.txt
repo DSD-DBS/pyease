@@ -1,0 +1,7 @@
+pyease
+======
+
+.. toctree::
+   :maxdepth: 4
+
+   pyease
