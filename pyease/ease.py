@@ -1,4 +1,4 @@
-# SPDX-FileCopyrightText: Copyright DB Netz AG and the pyease contributors
+# SPDX-FileCopyrightText: Copyright DB InfraGO AG and the pyease contributors
 # SPDX-License-Identifier: Apache-2.0
 
 """Module with helper functions to use EASE with Python.

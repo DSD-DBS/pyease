@@ -1,5 +1,5 @@
 @ECHO OFF
-REM SPDX-FileCopyrightText: Copyright DB Netz AG and the pyease contributors
+REM SPDX-FileCopyrightText: Copyright DB InfraGO AG and the pyease contributors
 REM SPDX-License-Identifier: CC0-1.0
 
 pushd %~dp0
