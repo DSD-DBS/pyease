@@ -1,5 +1,5 @@
 ..
-   SPDX-FileCopyrightText: Copyright DB Netz AG and the pyease contributors
+   SPDX-FileCopyrightText: Copyright DB InfraGO AG and the pyease contributors
    SPDX-License-Identifier: Apache-2.0
 
 Contributing
